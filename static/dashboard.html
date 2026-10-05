@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kami node — dashboard</title>
+    <style>
+      :root {
+        --bg: #000;
+        --fg: #fff;
+        --dim: #888;
+        --accent: #57e07a;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: monospace;
+        font-size: 14px;
+        padding: 12px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 17px;
+        margin-bottom: 8px;
+      }
+      h1 a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      #hw {
+        color: var(--dim);
+        margin-bottom: 12px;
+      }
+      .filebtn {
+        display: inline-block;
+        margin: 3px 6px 3px 0;
+        padding: 6px 10px;
+        background: #111;
+        color: var(--fg);
+        border: 1px solid #444;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .filebtn.active {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      pre {
+        background: #0a0a0a;
+        border: 1px solid #222;
+        border-radius: 8px;
+        padding: 12px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+      .dim {
+        color: var(--dim);
+      }
+      .catbox {
+        border: 1px solid #2a2a2a;
+        border-radius: 12px;
+        padding: 10px 12px;
+        margin: 8px 0;
+      }
+      .cattitle {
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 6px;
+        color: var(--fg);
+      }
+      .cattitle .what {
+        font-weight: normal;
+        color: var(--dim);
+        font-size: 11px;
+      }
+      #resetlogs {
+        margin: 10px 0 6px;
+        padding: 7px 12px;
+        background: #1a0a0a;
+        color: #ff8a8a;
+        border: 1px solid #5c1c1c;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+      #resetmsg {
+        color: var(--dim);
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1><a href="/">← chat</a> · kami node dashboard</h1>
+    <div id="hw">…</div>
+    <button id="resetlogs">🗑 reset logs</button>
+    <div id="resetmsg"></div>
+    <div id="files"></div>
+    <pre id="view" class="dim">select a file above</pre>
+    <script>
+      'use strict';
+      const filesDiv = document.getElementById('files');
+      const view = document.getElementById('view');
+      const hw = document.getElementById('hw');
+      const resetBtn = document.getElementById('resetlogs');
+      const resetMsg = document.getElementById('resetmsg');
+      let current = null;
+
+      resetBtn.onclick = async () => {
+        const ok = confirm(
+          'Reset ALL logs?\n\nThis clears the conversation history (turn_log.jsonl) ' +
+            'and the daily journal (journal.md). Memory notes and sensor data are kept.',
+        );
+        if (!ok) return;
+        resetMsg.textContent = 'clearing…';
+        try {
+          const d = await (await fetch('/api/reset-logs', { method: 'POST' })).json();
+          resetMsg.textContent = d.cleared?.length ? 'cleared: ' + d.cleared.join(', ') : 'nothing to clear';
+        } catch (e) {
+          resetMsg.textContent = 'error: ' + e.message;
+        }
+      };
+
+      async function refreshHW() {
+        try {
+          const s = await (await fetch('/api/status')).json();
+          hw.textContent =
+            `${s.model} · CPU ${s.cpu_percent?.toFixed(0) ?? '?'}% · ` +
+            `RAM ${s.ram_percent?.toFixed(0) ?? '?'}% · ${s.temperature_c?.toFixed(0) ?? '?'}°C · ` +
+            (s.active ? 'GENERATING' : 'idle');
+        } catch {
+          hw.textContent = 'unreachable';
+        }
+      }
+
+      const CATS = {
+        identity: { icon: '🧠', title: 'Identity', what: 'who the kami is, its journal' },
+        sensors: { icon: '📡', title: 'Sensors', what: 'telemetry from its body and the place' },
+        community: { icon: '📝', title: 'Community', what: 'notes, suggestions, polls from people' },
+      };
+
+      async function loadFiles() {
+        const d = await (await fetch('/api/files')).json();
+        filesDiv.innerHTML = '';
+        for (const [cat, meta] of Object.entries(CATS)) {
+          const box = document.createElement('div');
+          box.className = 'catbox';
+          const title = document.createElement('div');
+          title.className = 'cattitle';
+          title.innerHTML = `${meta.icon} ${meta.title} <span class="what">— ${meta.what}</span>`;
+          box.appendChild(title);
+          const files = d.files.filter((f) => f.startsWith(cat + '/'));
+          if (!files.length) {
+            const none = document.createElement('span');
+            none.className = 'dim';
+            none.textContent = '(nothing yet)';
+            box.appendChild(none);
+          }
+          for (const f of files) {
+            const b = document.createElement('button');
+            b.className = 'filebtn' + (f === current ? ' active' : '');
+            b.textContent = f.split('/')[1]; // plain name, no folder prefix
+            b.onclick = () => {
+              current = f;
+              loadFile(f);
+              loadFiles();
+            };
+            box.appendChild(b);
+          }
+          filesDiv.appendChild(box);
+        }
+      }
+
+      async function loadFile(name) {
+        view.classList.remove('dim');
+        view.textContent = 'loading…';
+        try {
+          const r = await fetch('/api/file?name=' + encodeURIComponent(name) + '&t=' + Date.now());
+          view.textContent = r.ok ? await r.text() : 'error ' + r.status;
+        } catch (e) {
+          view.textContent = 'error: ' + e.message;
+        }
+      }
+
+      refreshHW();
+      loadFiles();
+      setInterval(refreshHW, 10000);
+      // auto-refresh the open file so the dashboard feels live
+      setInterval(() => {
+        if (current) loadFile(current);
+      }, 15000);
+    </script>
+  </body>
+</html>

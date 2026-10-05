@@ -1,0 +1,16 @@
+[Unit]
+Description=SolarTurtle voice loop (USB mic, controlled from the web page)
+After=multi-user.target sound.target
+
+[Service]
+Type=simple
+User=admin
+SupplementaryGroups=audio
+WorkingDirectory=/home/admin/solarturtle
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/admin/voice-venv/bin/python /home/admin/solarturtle/voice/talk.py --serve
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

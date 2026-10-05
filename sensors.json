@@ -1,0 +1,35 @@
+{
+  "comment": "Sensor registry for the kami node. Read at boot by sensors_boot.py (and by hand when editing). Each entry: a logger process to spawn, its parameters, and where it logs. 'active: false' = registered but not spawned. This is CONFIG for machines; humans + the LLM read the log files' headers for the story.",
+  "sensors": [
+    {
+      "id": "pivitals",
+      "name": "Node vitals (CPU/RAM/temp)",
+      "type": "internal",
+      "logger": "loggers/sensor_pivitals.py",
+      "log_file": "sensors/sensor_pivitals.md",
+      "interval_seconds": 60,
+      "active": true,
+      "params": { "max_lines": 60 }
+    },
+    {
+      "id": "solarpower",
+      "name": "Solar panel + battery (DUMMY until INA219 is wired)",
+      "type": "power",
+      "logger": "loggers/sensor_solarpower.py",
+      "log_file": "sensors/sensor_solarpower.md",
+      "interval_seconds": 300,
+      "active": true,
+      "params": { "max_lines": 120 }
+    },
+    {
+      "id": "mic_calibration",
+      "name": "Microphone (ReSpeaker) calibration history",
+      "type": "audio",
+      "logger": "voice/mic_setup.py",
+      "log_file": "sensors/mic_calibration.md",
+      "interval_seconds": null,
+      "active": false,
+      "params": { "note": "not periodic — runs only when calibrating" }
+    }
+  ]
+}

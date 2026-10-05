@@ -3,3 +3,7 @@ __pycache__/
 .venv/
 .env
 .DS_Store
+node_settings.json
+certs/
+models/
+identity/turn_log.jsonl
