@@ -31,7 +31,7 @@ rsync -av --delete \
 # (No-op with a hint if the systemd units aren't installed yet.)
 ssh "$PI_HOST" '
   sudo -n systemctl restart solarturtle-web 2>/dev/null && echo "solarturtle-web restarted." \
-    || echo "(solarturtle-web service not installed — run: sudo bash install_autostart.sh — or restart web_server.py by hand)"
+    || echo "(solarturtle-web service not installed — run: sudo bash set_autostart.sh on — or restart web_server.py by hand)"
   if systemctl list-unit-files | grep -q solarturtle-voice; then
     sudo -n systemctl restart solarturtle-voice 2>/dev/null && echo "solarturtle-voice restarted."
   fi

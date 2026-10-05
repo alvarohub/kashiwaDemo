@@ -9,6 +9,15 @@ set -euo pipefail
 echo "Stopping SolarTurtle…"
 sudo systemctl stop solarturtle-web solarturtle-voice solarturtle-sensors
 
+# Also sweep leftover processes from earlier manual runs — systemd only stops
+# its own cgroup; a hand-started ./kami or a half-dead service can leave
+# web / sensors / loggers / voice / arecord processes behind.
+pkill -f "(python|python3) .*web_server\.py" 2>/dev/null || true
+pkill -f "(python|python3) .*sensors_boot\.py" 2>/dev/null || true
+pkill -f "(python|python3) .*loggers/sensor_" 2>/dev/null || true
+pkill -f "(python|python3) .*voice/talk\.py" 2>/dev/null || true
+pkill -f "arecord.*kami_" 2>/dev/null || true
+
 if [[ "${1:-}" == "--all" ]]; then
   echo "Stopping Ollama too…"
   sudo systemctl stop ollama

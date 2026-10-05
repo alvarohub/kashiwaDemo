@@ -4,7 +4,7 @@
 #     ./kami
 #
 # Starts the sensor loggers, the voice loop (if ~/voice-venv exists), and the
-# web chat in the foreground. With the autostart services installed, control
+# web chat in the foreground. With autostart set (set_autostart.sh on), control
 # those instead:   ./start_kami.sh   /   ./stop_kami.sh
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"

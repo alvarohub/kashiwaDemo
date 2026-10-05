@@ -7,7 +7,7 @@
 # Installs: system packages (apt), Ollama, and the model named in config.py.
 # Does NOT enable autostart — that is a separate, optional step:
 #
-#     sudo bash install_autostart.sh
+#     sudo bash set_autostart.sh on
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
@@ -60,7 +60,7 @@ echo "== Done =="
 cat <<'EOM'
 Run the node now:               ./kami
 Phone chat:                     http://<this-pi>:8080
-Start on boot (optional):       sudo bash install_autostart.sh
+Run at boot (optional):         sudo bash set_autostart.sh on
 Wi-Fi AP + portal (optional):   sudo bash ap_up.sh  &&  sudo bash portal_up.sh
 Voice, USB mic (optional):      bash setup_voice.sh
 EOM

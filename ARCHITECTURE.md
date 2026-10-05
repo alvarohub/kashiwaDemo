@@ -62,7 +62,7 @@ only separate moving part is Ollama (the local model server, also on the Pi).
 
 **Ops**:
 
-- `install.sh` (setup) · `kami` (run now) · `install_autostart.sh`
+- `install.sh` (setup) · `kami` (run now) · `set_autostart.sh on|off`
   (optional boot services) · `start_kami.sh` / `stop_kami.sh` (control the
   installed services) · `ap_up.sh` / `ap_down.sh` (Wi-Fi access point) ·
   `portal_up.sh` / `portal_down.sh` (captive portal) · `make_cert.sh`

@@ -376,7 +376,7 @@ class WebApplication:
         @app.post("/api/voice/restart")
         def voice_restart():
             """Last resort: restart the voice process from the page.
-            Works because install_autostart.sh scoped a passwordless sudo
+            Works because set_autostart.sh scoped a passwordless sudo
             rule for exactly this command."""
             import subprocess
             try:

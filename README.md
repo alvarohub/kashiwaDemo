@@ -103,14 +103,21 @@ Ctrl+C stops everything. Just want to chat in the terminal instead?
     python3 main.py        # console mode without a display; fullscreen GUI with one
     python3 console.py     # explicit console chat
 
-## 5. Optional: start it on boot (autostart)
+## 5. Optional: run it automatically at boot
 
-    sudo bash install_autostart.sh
+    sudo bash set_autostart.sh on
 
-Now the node (web + sensors + voice-if-set-up) starts at every boot, and the
-chat is always at `:8080`. Control it later with `./start_kami.sh` /
-`./stop_kami.sh` · undo with `sudo bash install_autostart.sh --uninstall`.
-This script adapts the service files to **your** username automatically.
+Installs the node's background services (web + sensors + voice, adapted to
+your username) and **starts the node right away**; from then on it starts by
+itself at every boot, chat always at `:8080`. With no argument, the script
+shows the current state. To undo (stops and removes everything, and cleans
+up leftover processes):
+
+    sudo bash set_autostart.sh off
+
+Ollama is left running when you turn autostart off (`sudo systemctl stop
+ollama` stops it). While autostart is on, `./start_kami.sh` / `./stop_kami.sh`
+start and stop the node without removing anything.
 
 ## 6. Optional: Wi-Fi access point + captive portal
 
@@ -141,7 +148,7 @@ microphone is required (this was developed with a ReSpeaker 4-mic array;
 
 | What                   | Where                                                                        | Notes                                                                           |
 | ---------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Your username          | — handled automatically                                                      | `install_autostart.sh` adapts the services + cron to whoever runs `sudo`        |
+| Your username          | — handled automatically                                                      | `set_autostart.sh` adapts the services + cron to whoever runs `sudo`        |
 | The folder             | keep it as `~/solarturtle`                                                   | all scripts/services assume this name                                           |
 | Pi address             | `PI_HOST` in `push_to_pi.sh`; the `ssh`/`rsync` examples above               | only where you connect                                                          |
 | Wi-Fi AP name/password | `sudo bash ap_up.sh "Name" "Password"`, or the defaults inside `ap_up.sh`    | defaults are development values                                                 |
