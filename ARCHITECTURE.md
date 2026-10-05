@@ -5,9 +5,34 @@ only separate moving part is Ollama (the local model server, also on the Pi).
 
 ## The big picture
 
-Read it top to bottom: people reach a frontend; every frontend embeds the
-same core; the core asks the model; the model sees the memory files; the
-sensing loggers keep those files fresh.
+One Pi = one node, fully offline. People reach it in three ways — the web
+page (phone or laptop), a terminal over SSH, or the USB microphone — and
+each way is a separate small program, a **frontend**. All frontends embed
+the same few Python files, the **core**: the code that builds the prompt
+from the memory files, talks to the model and keeps the live status. The
+**model** (Ollama) is the only other service; it receives one prompt at a
+time and streams the answer back to whoever asked. It never acts on its
+own.
+
+Two things to keep in mind:
+
+- **A question and its answer travel the same path, in opposite directions.**
+  People → frontend+core → model for the question; the answer streams back
+  along the same channel, token by token.
+- **The model never writes.** It only reads the memory when composing an
+  answer. The memory's writers are the sensors (readings), people (notes
+  left on the page), the nightly journal job, and you (the identity file,
+  edited by hand); the frontends also keep small bookkeeping files (turn
+  log, settings).
+
+**A question, and its answer — the two directions:**
+
+```
+  people ───── question ─────►  frontend + core  ───── prompt ─────►  model
+         ◄───── answer ──────                    ◄───── tokens ──────
+```
+
+The same picture, as blocks — each one is opened up in the next section:
 
 ```
 ┌─ PEOPLE & DEVICES ────────────────────────┐
