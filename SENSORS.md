@@ -18,7 +18,7 @@ framework — the files ARE the interface (the LLM reads them; so can you).
                                           (never the whole log)
 ```
 
-See what would run:  `python3 sensors_boot.py --status`
+See what would run: `python3 sensors_boot.py --status`
 
 ## Conventions (what makes a good logger)
 
@@ -93,16 +93,16 @@ copy-and-edit start.)
 ### 2. Register it — add to `sensors.json`
 
 ```json
-    {
-      "id": "light",
-      "name": "Ambient light (north side)",
-      "type": "environment",
-      "logger": "loggers/sensor_light.py",
-      "log_file": "sensors/sensor_light.md",
-      "interval_seconds": 60,
-      "active": true,
-      "params": { "max_lines": 120 }
-    }
+{
+  "id": "light",
+  "name": "Ambient light (north side)",
+  "type": "environment",
+  "logger": "loggers/sensor_light.py",
+  "log_file": "sensors/sensor_light.md",
+  "interval_seconds": 60,
+  "active": true,
+  "params": { "max_lines": 120 }
+}
 ```
 
 ### 3. Start it and check

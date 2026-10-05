@@ -10,8 +10,8 @@ See `CREDITS.md` for credits.
 ## The shortest path
 
 1. Prepare the Pi (§1) → 2. Get the code (§2) → 3. Install (`bash install.sh`, §3)
-→ 4. Run (`./kami`, §4). Optional: autostart (§5), Wi-Fi access point (§6),
-voice (§7).
+   → 4. Run (`./kami`, §4). Optional: autostart (§5), Wi-Fi access point (§6),
+   voice (§7).
 
 ## What you need
 
@@ -31,11 +31,11 @@ voice (§7).
    username + password, your Wi-Fi, and **enable SSH**.
 2. Boot the Pi, then from your computer:
 
-       ssh <user>@<hostname>.local        # or use the Pi's IP address
+   ssh <user>@<hostname>.local # or use the Pi's IP address
 
 3. Update the system:
 
-       sudo apt update && sudo apt full-upgrade -y
+   sudo apt update && sudo apt full-upgrade -y
 
 ## 2. Get the code onto the Pi — three options
 
@@ -71,8 +71,9 @@ partition cannot be written from macOS/Windows. So:
 1. Copy the `kashiwaDemo` folder onto the boot partition.
 2. Boot the Pi and move it into place:
 
-       sudo mv /boot/firmware/kashiwaDemo ~/solarturtle      # Bookworm and newer
-       # (on older systems the mount point is /boot/, not /boot/firmware/)
+   sudo mv /boot/firmware/kashiwaDemo ~/solarturtle # Bookworm and newer
+
+   # (on older systems the mount point is /boot/, not /boot/firmware/)
 
 Clumsy by design — prefer Option A or B whenever a network path exists.
 
@@ -138,16 +139,16 @@ microphone is required (this was developed with a ReSpeaker 4-mic array;
 
 ## Adapt to your setup
 
-| What | Where | Notes |
-| ---- | ----- | ----- |
-| Your username | — handled automatically | `install_autostart.sh` adapts the services + cron to whoever runs `sudo` |
-| The folder | keep it as `~/solarturtle` | all scripts/services assume this name |
-| Pi address | `PI_HOST` in `push_to_pi.sh`; the `ssh`/`rsync` examples above | only where you connect |
-| Wi-Fi AP name/password | `sudo bash ap_up.sh "Name" "Password"`, or the defaults inside `ap_up.sh` | defaults are development values |
-| HTTPS certificate | SAN list in `make_cert.sh` (only if you use `python3 web_server.py --https`) | self-signed; each device accepts it once |
-| Model | `MODEL_NAME` in `config.py`, then re-run `install.sh` | default `llama3.2:1b` |
-| The node's personality | `identity/identity.md` | template — give it a name and a place |
-| Voice paths | candidates list in `voice/vad.py` | first candidate is `models/silero_vad.onnx` → put it there via `setup_voice.sh` |
+| What                   | Where                                                                        | Notes                                                                           |
+| ---------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Your username          | — handled automatically                                                      | `install_autostart.sh` adapts the services + cron to whoever runs `sudo`        |
+| The folder             | keep it as `~/solarturtle`                                                   | all scripts/services assume this name                                           |
+| Pi address             | `PI_HOST` in `push_to_pi.sh`; the `ssh`/`rsync` examples above               | only where you connect                                                          |
+| Wi-Fi AP name/password | `sudo bash ap_up.sh "Name" "Password"`, or the defaults inside `ap_up.sh`    | defaults are development values                                                 |
+| HTTPS certificate      | SAN list in `make_cert.sh` (only if you use `python3 web_server.py --https`) | self-signed; each device accepts it once                                        |
+| Model                  | `MODEL_NAME` in `config.py`, then re-run `install.sh`                        | default `llama3.2:1b`                                                           |
+| The node's personality | `identity/identity.md`                                                       | template — give it a name and a place                                           |
+| Voice paths            | candidates list in `voice/vad.py`                                            | first candidate is `models/silero_vad.onnx` → put it there via `setup_voice.sh` |
 
 ## Files your node will modify (normal)
 
@@ -162,12 +163,12 @@ If you version your changes, expect `git status` to show these as modified.
 
 ## Troubleshooting
 
-| Symptom | Explanation / fix |
-| ------- | ----------------- |
-| First answer takes ~10–30 s | normal — the model loads into RAM on first use |
-| Model missing / Ollama errors | `systemctl status ollama`; re-run `bash install.sh` |
-| Port 8080 already in use | an older run is still up — `sudo lsof -i :8080` |
-| Crashes under load / lightning bolt icon | undervoltage — use the official 27 W PSU |
-| Temperature above ~80 °C | add active cooling (the Pi throttles at 85 °C) |
-| Phone can't reach the chat | same network? use `hostname -I` on the Pi for its IP |
-| Mic shows "offline" on the page | run `bash setup_voice.sh`; check the voice process output |
+| Symptom                                  | Explanation / fix                                         |
+| ---------------------------------------- | --------------------------------------------------------- |
+| First answer takes ~10–30 s              | normal — the model loads into RAM on first use            |
+| Model missing / Ollama errors            | `systemctl status ollama`; re-run `bash install.sh`       |
+| Port 8080 already in use                 | an older run is still up — `sudo lsof -i :8080`           |
+| Crashes under load / lightning bolt icon | undervoltage — use the official 27 W PSU                  |
+| Temperature above ~80 °C                 | add active cooling (the Pi throttles at 85 °C)            |
+| Phone can't reach the chat               | same network? use `hostname -I` on the Pi for its IP      |
+| Mic shows "offline" on the page          | run `bash setup_voice.sh`; check the voice process output |
