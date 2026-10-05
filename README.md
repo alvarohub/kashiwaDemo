@@ -1,11 +1,9 @@
-# Kashiwa Demo — a local conversational node
+# Kashiwa Demo — SolarTurtle (local conversational node)
 
 A self-contained demo of a small local AI node: a language model running on a
 Raspberry Pi (via Ollama), a terminal chat, a phone-friendly web chat, sensor
 loggers that give the node a sense of its own place, and an optional voice
 loop. Everything runs locally — no cloud, no accounts.
-
-See `CREDITS.md` for credits.
 
 ## The shortest path
 
@@ -179,3 +177,15 @@ If you version your changes, expect `git status` to show these as modified.
 | Temperature above ~80 °C                 | add active cooling (the Pi throttles at 85 °C)            |
 | Phone can't reach the chat               | same network? use `hostname -I` on the Pi for its IP      |
 | Mic shows "offline" on the page          | run `bash setup_voice.sh`; check the voice process output |
+
+
+# Credits
+
+This demo is a simplified, self-contained local AI node for the larger project "Hierarchical Civic AI". It's an example of the "level 1" or "public node" (running on a Raspberry Pi).
+
+- **Seed code**: the original "SSAI" prototype — a minimal Tkinter + Ollama
+  chat (~1,000 lines) — was written by Ido Hoffmann (with one commit by Yuri
+  Klebanov) at **DLX - Design Lab, University of Tokyo** (Sept 2026):
+  https://github.com/dlx-designlab/ssai
+- **Lead development & architecture**: Alvaro Cassinelli.
+- **Co-development**: GitHub Copilot, from 2026-09-17 onward.
