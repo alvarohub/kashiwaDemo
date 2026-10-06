@@ -72,6 +72,7 @@ partition cannot be written from macOS/Windows. So:
    sudo mv /boot/firmware/kashiwaDemo ~/solarturtle # Bookworm and newer
 
 (on older systems the mount point is /boot/, not /boot/firmware/)
+
 Clumsy by design — prefer Option A or B whenever a network path exists.
 
 ## 3. Install (one command)
@@ -89,7 +90,9 @@ Takes a few minutes on a decent connection.
 
     ./kami
 
-Starts the sensor loggers, the voice loop (if set up — §7), and the web chat in your terminal. Open the shown address from any phone or computer on the same network:
+Starts the sensor loggers, the voice loop (if set up — §7), and the web chat
+in your terminal. Open the shown address from any phone or computer on the
+same network:
 
     http://<pi-ip>:8080
 
