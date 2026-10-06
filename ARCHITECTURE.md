@@ -7,9 +7,9 @@ only separate moving part is Ollama (the local model server, also on the Pi).
 
 One Pi = one node, fully offline. People reach it in three ways — the web
 page (phone or laptop), a terminal over SSH, or the USB microphone — and
-each way is a separate small program, a **frontend**. All frontends embed
-the same few Python files, the **core**: the code that builds the prompt
-from the memory files, talks to the model and keeps the live status. The
+each way is a separate small program, a **frontend**. All frontends import
+and run the same few Python files, the **core**: the code that builds the
+prompt from the memory files, talks to the model and keeps the live status. The
 **model** (Ollama) is the only other service; it receives one prompt at a
 time and streams the answer back to whoever asked. It never acts on its
 own.
@@ -47,7 +47,7 @@ The same picture, as blocks — each one is opened up in the next section:
 └───────────────┬───────────────────────────┘     │  control.py                  │
                 │ every frontend embeds the CORE  └──────────────────────────────┘
                 ▼
-┌─ CORE (shared code inside every frontend) ┐     ┌─ MEMORY (plain text) ────────┐
+┌─ CORE (shared code, run by each frontend) ┐     ┌─ MEMORY (plain text) ────────┐
 │  llm_manager.py    (the only model client)│◄────│  identity/   (who it is)     │
 │  reports_reader.py (files → prompt digest)│     │  sensors/    (latest lines)  │
 │  node_settings.py  (one shared settings)  │     │  community/  (people's notes)│
@@ -88,7 +88,15 @@ A question, end to end:
   frontend ──► LLMManager.stream_response() ──► Ollama ──► token stream ──► rendered live
 ```
 
-### Core — the same small library inside every frontend
+### Core — the same small library, run by each frontend
+
+The core is not a separate program: it is a small set of Python files that
+**each frontend imports when it starts**. When `web_server.py` runs, this
+code runs as part of *that* process; when `voice/talk.py` runs, the same
+code runs again in *that* process — each frontend carries its own copy.
+The frontends stay in sync through the shared files (`node_settings.json`,
+the memory folders, the live status), not through a central service. There
+is no "core" process to start or stop.
 
 - `llm_manager.py` — streaming client for Ollama; assembles the prompt
   (system prompt + selected memory categories + history); records metrics

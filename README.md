@@ -71,8 +71,7 @@ partition cannot be written from macOS/Windows. So:
 
    sudo mv /boot/firmware/kashiwaDemo ~/solarturtle # Bookworm and newer
 
-   # (on older systems the mount point is /boot/, not /boot/firmware/)
-
+(on older systems the mount point is /boot/, not /boot/firmware/)
 Clumsy by design — prefer Option A or B whenever a network path exists.
 
 ## 3. Install (one command)
@@ -90,9 +89,7 @@ Takes a few minutes on a decent connection.
 
     ./kami
 
-Starts the sensor loggers, the voice loop (if set up — §7), and the web chat
-in your terminal. Open the shown address from any phone or computer on the
-same network:
+Starts the sensor loggers, the voice loop (if set up — §7), and the web chat in your terminal. Open the shown address from any phone or computer on the same network:
 
     http://<pi-ip>:8080
 
@@ -146,7 +143,7 @@ microphone is required (this was developed with a ReSpeaker 4-mic array;
 
 | What                   | Where                                                                        | Notes                                                                           |
 | ---------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Your username          | — handled automatically                                                      | `set_autostart.sh` adapts the services + cron to whoever runs `sudo`        |
+| Your username          | — handled automatically                                                      | `set_autostart.sh` adapts the services + cron to whoever runs `sudo`            |
 | The folder             | keep it as `~/solarturtle`                                                   | all scripts/services assume this name                                           |
 | Pi address             | `PI_HOST` in `push_to_pi.sh`; the `ssh`/`rsync` examples above               | only where you connect                                                          |
 | Wi-Fi AP name/password | `sudo bash ap_up.sh "Name" "Password"`, or the defaults inside `ap_up.sh`    | defaults are development values                                                 |
@@ -177,7 +174,6 @@ If you version your changes, expect `git status` to show these as modified.
 | Temperature above ~80 °C                 | add active cooling (the Pi throttles at 85 °C)            |
 | Phone can't reach the chat               | same network? use `hostname -I` on the Pi for its IP      |
 | Mic shows "offline" on the page          | run `bash setup_voice.sh`; check the voice process output |
-
 
 # Credits
 
