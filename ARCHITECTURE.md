@@ -92,11 +92,20 @@ A question, end to end:
 
 The core is not a separate program: it is a small set of Python files that
 **each frontend imports when it starts**. When `web_server.py` runs, this
-code runs as part of *that* process; when `voice/talk.py` runs, the same
-code runs again in *that* process — each frontend carries its own copy.
+code runs as part of _that_ process; when `voice/talk.py` runs, the same
+code runs again in _that_ process — each frontend carries its own copy.
 The frontends stay in sync through the shared files (`node_settings.json`,
 the memory folders, the live status), not through a central service. There
 is no "core" process to start or stop.
+
+**The core is a library, not a service.** In C++ terms: importing the core
+is like linking a small library — the code is shared, but each process runs
+its own copy of it (a C++ global object is also per-process; one object
+shared by several programs would need shared memory or a server). The one
+genuinely shared _process_ in this node is exactly that kind of server:
+**Ollama** (next section), which holds the model and serves every frontend
+on `127.0.0.1:11434`. Anything else that must be shared travels through
+plain files.
 
 - `llm_manager.py` — streaming client for Ollama; assembles the prompt
   (system prompt + selected memory categories + history); records metrics
